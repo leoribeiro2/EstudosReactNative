@@ -1,27 +1,35 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
-  View
+  ScrollView
 } from 'react-native';
-import Itens from './Itens.component'
+import Item from './Item.component'
 import Axios from 'axios'
 
 export default class ListaItens extends Component{
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      listaItens: []
+    }
+  }
+
   componentWillMount() {
     Axios.get('http://faus.com.br/recursos/c/dmairr/api/itens.html')
-      .then(response => console.log(response))
+      .then(response => {
+        this.setState({
+          listaItens: response.data
+        })
+      })
       .catch(err => console.log(err))
   }
 
-  render(){
-    console.log('redenrizou');
-    return(
-      <View>
-        <Itens></Itens>
-        <Itens></Itens>
-        <Itens></Itens>
-      </View>
+  render() {
+    return (
+      <ScrollView>
+        {this.state.listaItens.map(item => (<Item key={item.titulo} item={item}/>))}
+      </ScrollView>
     )
   }
 }
